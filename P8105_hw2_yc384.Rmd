@@ -1,0 +1,65 @@
+---
+title: "P8105_hw2_yc384"
+author: 'Ying Chen (UNI: yc384)'
+date: "9/24/2019"
+output: github_document
+---
+
+setwd("/Users/macbook/Documents/Statistics/P8105/HW/P8105 HW2")
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+library (tidyverse)
+library (dplyr)
+library(readxl)
+rm(list = ls())
+
+options(tibble.print_min = 3)
+```
+
+##  P8105 DSI Homework 1
+### This assignment reinforces ideas in Data Wrangling I
+
+####  1. Problem 0 
+####    * Github repo: https://github.com/YingCarolineChen/p8105_hw2_yc384.git
+####    * RMarkdown file name: P8105_hw2_yc384
+####    * Create a subdirectory to store local data files and the path is:
+####      "~/Documents/Statistics/P8105/HW/P8105 HW2"
+
+
+###   2. Problem 1 
+####    * Dataset: Mr. Trash Wheel / MS Excel file / Contains 8 sheets
+####    * Read & clean the Mr. Trash Wheel sheet
+
+```{r Q1MrTrashWheel}
+# read in Mr. Trash Wheel sheet
+MrTrashWheel = 
+  read_excel("./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet = "Mr. Trash Wheel", skip = 1, col_names = TRUE) %>% 
+  janitor::clean_names()
+
+# omit rows has NA for dumpster
+dumpster = 
+  drop_na(MrTrashWheel,dumpster) %>% 
+  # Round sports balls to nearest integer
+  mutate(
+  sports_balls_round = round(sports_balls, digits = 0),
+  sports_balls_int = as.integer(sports_balls_round)
+)
+
+# Check data
+head(MrTrashWheel,5)
+view(dumpster, 20)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
