@@ -1,0 +1,498 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={P8105\_hw2\_yc384},
+            pdfauthor={Ying Chen (UNI: yc384)},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{P8105\_hw2\_yc384}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Ying Chen (UNI: yc384)}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{9/24/2019}
+
+
+\begin{document}
+\maketitle
+
+setwd(``/Users/macbook/Documents/Statistics/P8105/HW/P8105 HW2'')
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{knitr}\OperatorTok{::}\NormalTok{opts_chunk}\OperatorTok{$}\KeywordTok{set}\NormalTok{(}\DataTypeTok{echo =} \OtherTok{TRUE}\NormalTok{)}
+\KeywordTok{library}\NormalTok{ (tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## -- Attaching packages ---------------------------------------------------------------------------------------------- tidyverse 1.2.1 --
+\end{verbatim}
+
+\begin{verbatim}
+## v ggplot2 3.2.1     v purrr   0.3.2
+## v tibble  2.1.3     v dplyr   0.8.3
+## v tidyr   1.0.0     v stringr 1.4.0
+## v readr   1.3.1     v forcats 0.4.0
+\end{verbatim}
+
+\begin{verbatim}
+## -- Conflicts ------------------------------------------------------------------------------------------------- tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{ (dplyr)}
+\KeywordTok{library}\NormalTok{(readxl)}
+\KeywordTok{rm}\NormalTok{(}\DataTypeTok{list =} \KeywordTok{ls}\NormalTok{())}
+
+\KeywordTok{options}\NormalTok{(}\DataTypeTok{tibble.print_min =} \DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{p8105-dsi-homework-1}{%
+\subsection{P8105 DSI Homework 1}\label{p8105-dsi-homework-1}}
+
+\hypertarget{this-assignment-reinforces-ideas-in-data-wrangling-i}{%
+\subsubsection{This assignment reinforces ideas in Data Wrangling
+I}\label{this-assignment-reinforces-ideas-in-data-wrangling-i}}
+
+\hypertarget{problem-0}{%
+\paragraph{1. Problem 0}\label{problem-0}}
+
+\begin{verbatim}
+  * Github repo: https://github.com/YingCarolineChen/p8105_hw2_yc384.git
+  * RMarkdown file name: P8105_hw2_yc384
+  * Create a subdirectory to store local data files and the path is:
+    "~/Documents/Statistics/P8105/HW/P8105 HW2"
+\end{verbatim}
+
+\hypertarget{problem-1}{%
+\subsubsection{2. Problem 1}\label{problem-1}}
+
+\begin{verbatim}
+  * 1-1 Read and tidy Mr. Trash Wheel data
+  * Dataset: Mr. Trash Wheel / MS Excel file / Contains 8 sheets
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# read in Mr. Trash Wheel sheet}
+\CommentTok{# skip first rows with notes / figures}
+\CommentTok{# drop last column that containing notes}
+\NormalTok{MrTrashWheel =}\StringTok{ }
+\StringTok{  }\KeywordTok{read_excel}\NormalTok{(}\StringTok{"./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx"}\NormalTok{, }\DataTypeTok{sheet =} \StringTok{"Mr. Trash Wheel"}\NormalTok{, }\DataTypeTok{skip =} \DecValTok{1}\NormalTok{, }\DataTypeTok{range =} \StringTok{"A2:N338"}\NormalTok{, }\DataTypeTok{col_names =} \OtherTok{TRUE}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\NormalTok{janitor}\OperatorTok{::}\KeywordTok{clean_names}\NormalTok{()}
+
+\CommentTok{# omit rows has NA for dumpster}
+\NormalTok{dumpster =}\StringTok{ }
+\StringTok{  }\KeywordTok{drop_na}\NormalTok{(MrTrashWheel,dumpster) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\CommentTok{# Round sports balls to nearest integer}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}
+  \DataTypeTok{sports_balls_round =} \KeywordTok{round}\NormalTok{(sports_balls, }\DataTypeTok{digits =} \DecValTok{0}\NormalTok{),}
+  \DataTypeTok{sports_balls_int =} \KeywordTok{as.integer}\NormalTok{(sports_balls_round)}
+\NormalTok{)}
+
+\CommentTok{# rename to reasonable variable names}
+\NormalTok{dumpster_rename =}\StringTok{ }\KeywordTok{rename}\NormalTok{(dumpster, }\DataTypeTok{bags_grocery =}\NormalTok{ grocery_bags, }\DataTypeTok{bags_chip  =}\NormalTok{ chip_bags, }\DataTypeTok{bottles_plastic =}\NormalTok{ plastic_bottles, }\DataTypeTok{bottles_glass =}\NormalTok{ glass_bottles)}
+
+\CommentTok{# Check data}
+\KeywordTok{head}\NormalTok{(MrTrashWheel,}\DecValTok{5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 5 x 14
+##   dumpster month  year date                weight_tons volume_cubic_ya~
+##      <dbl> <chr> <dbl> <dttm>                    <dbl>            <dbl>
+## 1        1 May    2014 2014-05-16 00:00:00        4.31               18
+## 2        2 May    2014 2014-05-16 00:00:00        2.74               13
+## 3        3 May    2014 2014-05-16 00:00:00        3.45               15
+## 4        4 May    2014 2014-05-17 00:00:00        3.1                15
+## 5        5 May    2014 2014-05-17 00:00:00        4.06               18
+## # ... with 8 more variables: plastic_bottles <dbl>, polystyrene <dbl>,
+## #   cigarette_butts <dbl>, glass_bottles <dbl>, grocery_bags <dbl>,
+## #   chip_bags <dbl>, sports_balls <dbl>, homes_powered <dbl>
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{head}\NormalTok{(dumpster_rename, }\DecValTok{5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 5 x 16
+##   dumpster month  year date                weight_tons volume_cubic_ya~
+##      <dbl> <chr> <dbl> <dttm>                    <dbl>            <dbl>
+## 1        1 May    2014 2014-05-16 00:00:00        4.31               18
+## 2        2 May    2014 2014-05-16 00:00:00        2.74               13
+## 3        3 May    2014 2014-05-16 00:00:00        3.45               15
+## 4        4 May    2014 2014-05-17 00:00:00        3.1                15
+## 5        5 May    2014 2014-05-17 00:00:00        4.06               18
+## # ... with 10 more variables: bottles_plastic <dbl>, polystyrene <dbl>,
+## #   cigarette_butts <dbl>, bottles_glass <dbl>, bags_grocery <dbl>,
+## #   bags_chip <dbl>, sports_balls <dbl>, homes_powered <dbl>,
+## #   sports_balls_round <dbl>, sports_balls_int <int>
+\end{verbatim}
+
+\hypertarget{problem-1-1}{%
+\subsubsection{2. Problem 1}\label{problem-1-1}}
+
+\begin{verbatim}
+  * 1-2 Read and tidy precipitation data
+  *     join datasets and some data manipulations
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# read in precipitation data for 2017 and 2018}
+\CommentTok{# Omit rows without precipitation data and add a variable year}
+\NormalTok{precipitation_}\DecValTok{2017}\NormalTok{ =}\StringTok{ }
+\StringTok{  }\KeywordTok{read_excel}\NormalTok{(}\StringTok{"./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx"}\NormalTok{, }\DataTypeTok{sheet =} \StringTok{"2017 Precipitation"}\NormalTok{, }\DataTypeTok{skip =} \DecValTok{1}\NormalTok{, }\DataTypeTok{range =} \StringTok{"A2:B14"}\NormalTok{, }\DataTypeTok{col_names =} \OtherTok{TRUE}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\NormalTok{janitor}\OperatorTok{::}\KeywordTok{clean_names}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}
+    \DataTypeTok{year =} \DecValTok{2017}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{drop_na}\NormalTok{ (total)}
+
+\NormalTok{precipitation_}\DecValTok{2018}\NormalTok{ =}\StringTok{ }
+\StringTok{  }\KeywordTok{read_excel}\NormalTok{(}\StringTok{"./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx"}\NormalTok{, }\DataTypeTok{sheet =} \StringTok{"2018 Precipitation"}\NormalTok{, }\DataTypeTok{skip =} \DecValTok{1}\NormalTok{, }\DataTypeTok{range =} \StringTok{"A2:B14"}\NormalTok{, }\DataTypeTok{col_names =} \OtherTok{TRUE}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\NormalTok{janitor}\OperatorTok{::}\KeywordTok{clean_names}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}
+    \DataTypeTok{year =} \DecValTok{2018}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{drop_na}\NormalTok{ (total)}
+
+\CommentTok{# Combine precipitation datasets}
+\NormalTok{precipitation_join =}\StringTok{ }
+\StringTok{  }\KeywordTok{full_join}\NormalTok{(precipitation_}\DecValTok{2017}\NormalTok{, precipitation_}\DecValTok{2018}\NormalTok{, }\DataTypeTok{by =} \OtherTok{NULL}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\CommentTok{# convert month to a character variable}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}
+    \DataTypeTok{month =}\NormalTok{ month.name[month]}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Joining, by = c("month", "total", "year")
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{head}\NormalTok{(precipitation_join,}\DecValTok{5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 5 x 3
+##   month    total  year
+##   <chr>    <dbl> <dbl>
+## 1 January   2.34  2017
+## 2 February  1.46  2017
+## 3 March     3.57  2017
+## 4 April     3.99  2017
+## 5 May       5.64  2017
+\end{verbatim}
+
+\hypertarget{problem-1-2}{%
+\subsubsection{2. Problem 1}\label{problem-1-2}}
+
+\hypertarget{datasets-description-using-inline-r-code}{%
+\paragraph{* 1-3 Datasets description using inline R
+code}\label{datasets-description-using-inline-r-code}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dump2017 =}\StringTok{ }\KeywordTok{filter}\NormalTok{(dumpster, year }\OperatorTok{==}\StringTok{ }\DecValTok{2017}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Dataset Mr.~Trash Wheel contains 336 obersvations and 14 variables. The
+key variable for this dataset is called ``dumpster''. Variable
+``dumpster'' has 51 rows with ``NA'' and will be excluded for future
+analyses. The median number of sports balls in a dumpster in 2017 is: 8.
+
+Dataset precipitation\_2017 contains 12 obersvations and 3 variables.
+The key variables for this dataset is year and month. Dataset
+precipitation\_2018 contains 7 obersvations and 3 variables. The key
+variables for this dataset are year and month. Dataset
+precipitation\_join is the combination of datasets precipitation\_2017
+and precipitation\_2018. The total precipitation is 2018 is 23.5in.
+
+\hypertarget{problem-2}{%
+\subsubsection{3. Problem 2}\label{problem-2}}
+
+\hypertarget{read-pols-month.csv-unemployment.csv-and-snp.csv-and-merge-them-using-year-and-month-as-keys}{%
+\paragraph{* Read pols-month.csv, unemployment.csv, and snp.csv and
+merge them using year and month as
+keys}\label{read-pols-month.csv-unemployment.csv-and-snp.csv-and-merge-them-using-year-and-month-as-keys}}
+
+\hypertarget{this-code-cunk-will-read-and-tidy-pols-month.csv.}{%
+\paragraph{* 2-1 This code cunk will read and tidy
+pols-month.csv.}\label{this-code-cunk-will-read-and-tidy-pols-month.csv.}}
+
+\hypertarget{break-up-the-variable-mon-into-integer-variables-year-month-and-day}{%
+\paragraph{* break up the variable mon into integer variables year,
+month, and
+day;}\label{break-up-the-variable-mon-into-integer-variables-year-month-and-day}}
+
+\hypertarget{replace-month-number-with-month-name}{%
+\paragraph{* replace month number with month
+name;}\label{replace-month-number-with-month-name}}
+
+\hypertarget{create-a-president-variable-taking-values-gop-and-dem-remove-prez_dem-prez_gop-and-the-day-variable.}{%
+\paragraph{* create a president variable taking values gop and dem,
+remove prez\_dem, prez\_gop and the day
+variable.}\label{create-a-president-variable-taking-values-gop-and-dem-remove-prez_dem-prez_gop-and-the-day-variable.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# read in pols-month.csv}
+\NormalTok{pols_tidy =}\StringTok{ }
+\StringTok{  }\KeywordTok{read_csv}\NormalTok{(}\StringTok{"./data/pols-month.csv"}\NormalTok{, }\DataTypeTok{col_names =} \OtherTok{TRUE}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{ (}
+    \CommentTok{# change date format}
+    \DataTypeTok{Date =} \KeywordTok{as.Date}\NormalTok{(mon, }\DataTypeTok{format=}\StringTok{'%m/%d/%Y'}\NormalTok{)}
+\NormalTok{  ) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\NormalTok{janitor}\OperatorTok{::}\KeywordTok{clean_names}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\CommentTok{# break date to three vars}
+\StringTok{  }\KeywordTok{separate}\NormalTok{(., }\StringTok{"date"}\NormalTok{, }\KeywordTok{c}\NormalTok{(}\StringTok{"year"}\NormalTok{, }\StringTok{"month"}\NormalTok{, }\StringTok{"day"}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{ (}
+   \DataTypeTok{month =} \KeywordTok{as.numeric}\NormalTok{(month),}
+   \CommentTok{#replace month number with month name}
+   \DataTypeTok{month =}\NormalTok{ month.name[}\KeywordTok{c}\NormalTok{(month)],}
+   \DataTypeTok{president =}\NormalTok{ prez_gop }\OperatorTok{+}\StringTok{ }\NormalTok{prez_dem}
+\NormalTok{  ) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\CommentTok{# reorder varaibles and remove three variables}
+\StringTok{  }\KeywordTok{select}\NormalTok{(year, month, }\KeywordTok{everything}\NormalTok{(), }\OperatorTok{-}\NormalTok{prez_dem, }\OperatorTok{-}\NormalTok{prez_gop, }\OperatorTok{-}\NormalTok{day)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Parsed with column specification:
+## cols(
+##   mon = col_date(format = ""),
+##   prez_gop = col_double(),
+##   gov_gop = col_double(),
+##   sen_gop = col_double(),
+##   rep_gop = col_double(),
+##   prez_dem = col_double(),
+##   gov_dem = col_double(),
+##   sen_dem = col_double(),
+##   rep_dem = col_double()
+## )
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# read in snp.csv}
+\NormalTok{snp_tidy =}\StringTok{ }
+\StringTok{  }\KeywordTok{read_csv}\NormalTok{(}\StringTok{"./data/snp.csv"}\NormalTok{, }\DataTypeTok{col_names =} \OtherTok{TRUE}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{ (}
+    \CommentTok{# change date format}
+    \DataTypeTok{Date1 =} \KeywordTok{as.Date}\NormalTok{(date, }\DataTypeTok{format=}\StringTok{'%m/%d/%Y'}\NormalTok{)}
+\NormalTok{  ) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\NormalTok{janitor}\OperatorTok{::}\KeywordTok{clean_names}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\CommentTok{# break date to three vars}
+\StringTok{  }\KeywordTok{separate}\NormalTok{(., }\StringTok{"date1"}\NormalTok{, }\KeywordTok{c}\NormalTok{(}\StringTok{"year"}\NormalTok{, }\StringTok{"month"}\NormalTok{, }\StringTok{"day"}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{ (}
+   \DataTypeTok{month =} \KeywordTok{as.numeric}\NormalTok{(month),}
+   \CommentTok{#replace month number with month name}
+   \DataTypeTok{month =}\NormalTok{ month.name[}\KeywordTok{c}\NormalTok{(month)],}
+\NormalTok{  ) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\CommentTok{# reorder varaibles and remove three variables}
+\StringTok{  }\KeywordTok{select}\NormalTok{(year, month, }\KeywordTok{everything}\NormalTok{(), }\OperatorTok{-}\NormalTok{day)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Parsed with column specification:
+## cols(
+##   date = col_character(),
+##   close = col_double()
+## )
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# read in unemployment.csv}
+\NormalTok{unemployment =}\StringTok{ }
+\StringTok{  }\KeywordTok{read_csv}\NormalTok{(}\StringTok{"./data/unemployment.csv"}\NormalTok{, }\DataTypeTok{col_names =} \OtherTok{TRUE}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\NormalTok{janitor}\OperatorTok{::}\KeywordTok{clean_names}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Parsed with column specification:
+## cols(
+##   Year = col_double(),
+##   Jan = col_double(),
+##   Feb = col_double(),
+##   Mar = col_double(),
+##   Apr = col_double(),
+##   May = col_double(),
+##   Jun = col_double(),
+##   Jul = col_double(),
+##   Aug = col_double(),
+##   Sep = col_double(),
+##   Oct = col_double(),
+##   Nov = col_double(),
+##   Dec = col_double()
+## )
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{unemployment}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 68 x 13
+##    year   jan   feb   mar   apr   may   jun   jul   aug   sep   oct   nov
+##   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+## 1  1948   3.4   3.8   4     3.9   3.5   3.6   3.6   3.9   3.8   3.7   3.8
+## 2  1949   4.3   4.7   5     5.3   6.1   6.2   6.7   6.8   6.6   7.9   6.4
+## 3  1950   6.5   6.4   6.3   5.8   5.5   5.4   5     4.5   4.4   4.2   4.2
+## # ... with 65 more rows, and 1 more variable: dec <dbl>
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{unemployment_tidy =}\StringTok{ }
+\StringTok{  }\KeywordTok{pivot_longer}\NormalTok{(}
+\NormalTok{    unemployment,}
+\NormalTok{    jan}\OperatorTok{:}\NormalTok{dec,}
+    \DataTypeTok{names_to =} \StringTok{"month"}\NormalTok{,}
+    \DataTypeTok{values_to =} \StringTok{"unemploy_rate"}
+\NormalTok{  )}
+
+\NormalTok{unemployment_tidy}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 816 x 3
+##    year month unemploy_rate
+##   <dbl> <chr>         <dbl>
+## 1  1948 jan             3.4
+## 2  1948 feb             3.8
+## 3  1948 mar             4  
+## # ... with 813 more rows
+\end{verbatim}
+
+
+\end{document}
