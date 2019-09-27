@@ -21,14 +21,15 @@ options(tibble.print_min = 3)
 ### This assignment reinforces ideas in Data Wrangling I
 
 ####  1. Problem 0 
-      * Github repo: https://github.com/YingCarolineChen/p8105_hw2_yc384.git
-      * RMarkdown file name: P8105_hw2_yc384
-      * Create a subdirectory to store local data files and the path is:
+* Github repo: https://github.com/YingCarolineChen/p8105_hw2_yc384.git
+* RMarkdown file name: P8105_hw2_yc384
+* Create a subdirectory to store local data files and the path is:
         "~/Documents/Statistics/P8105/HW/P8105 HW2"
 
-###   2. Problem 1 
-      * 1-1 Read and tidy Mr. Trash Wheel data
-      * Dataset: Mr. Trash Wheel / MS Excel file / Contains 8 sheets
+####  2. Problem 1 
+* 1-1 Read and tidy Mr. Trash Wheel data
+* Dataset: Mr. Trash Wheel / MS Excel file / Contains 8 sheets
+
 
 ```{r Q1MrTrashWheel}
 # read in Mr. Trash Wheel sheet
@@ -55,9 +56,10 @@ head(MrTrashWheel,5)
 head(dumpster_rename, 5)
 ```
 
-###   2. Problem 1 
-      * 1-2 Read and tidy precipitation data
-      *     join datasets and some data manipulations
+####  2. Problem 1 
+* 1-2 Read and tidy precipitation data
+*     join datasets and some data manipulations
+
 
 ```{r Q1Precipitation}
 # read in precipitation data for 2017 and 2018
@@ -87,8 +89,9 @@ precipitation_join =
 head(precipitation_join,5)
 ```
 
-###   2. Problem 1 
-####      * 1-3 Datasets description using inline R code 
+####   2. Problem 1 
+* 1-3 Datasets description using inline R code 
+
 
 ```{r dump2017}
 dump2017 = filter(dumpster, year == 2017)
@@ -99,13 +102,14 @@ Dataset Mr. Trash Wheel contains `r nrow(MrTrashWheel)` obersvations and `r ncol
 Dataset precipitation_2017 contains `r nrow(precipitation_2017)` obersvations and `r ncol(precipitation_2017)` variables. The key variables for this dataset is year and month. Dataset precipitation_2018 contains `r nrow(precipitation_2018)` obersvations and `r ncol(precipitation_2018)` variables. The key variables for this dataset are year and month. Dataset precipitation_join is the combination of datasets precipitation_2017 and precipitation_2018. The total precipitation is 2018 is `r sum(precipitation_2018$total)`in.
 
 
-###   3. Problem 2 
-####      * Read pols-month.csv, unemployment.csv, and snp.csv and merge them using year and month as keys
+####   3. Problem 2 
+* Read pols-month.csv, unemployment.csv, and snp.csv and merge them using year and month as keys
+* 2-1 This code cunk will read and tidy pols-month.csv. 
+* break up the variable mon into integer variables year, month, and day; 
+* replace month number with month name; 
+* create a president variable taking values gop and dem, remove prez_dem, prez_gop & the day variable.
 
-####      * 2-1 This code cunk will read and tidy pols-month.csv. 
-####      *     break up the variable mon into integer variables year, month, and day; 
-####      *     replace month number with month name; 
-####      *     create a president variable taking values gop and dem, remove prez_dem, prez_gop and the day variable.
+####   2_1 Pols
 
 ```{r Q2 pols}
 # read in pols-month.csv
@@ -128,6 +132,7 @@ pols_tidy =
   select(year, month, everything(), -prez_dem, -prez_gop, -day)
 ```
 
+####   2_2 snp
 
 ```{r Q2 snp}
 # read in snp.csv
@@ -149,6 +154,7 @@ snp_tidy =
   select(year, month, everything(), -day)
 ```
 
+####   2_3 unemployment
 
 ```{r Q2 unemployment}
 # read in unemployment.csv
