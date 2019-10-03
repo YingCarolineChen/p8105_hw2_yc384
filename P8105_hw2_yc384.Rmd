@@ -27,7 +27,9 @@ options(tibble.print_min = 3)
 
 ####  2. Problem 1 
 * 1-1 Read and tidy Mr. Trash Wheel data
-* Dataset: Mr. Trash Wheel / MS Excel file / Contains 8 sheets
+* Dataset: used updated data "Trash-Wheel-Collection-Totals-8-6-19.xlsx"
+* Original dataset contains 7 sheets. For this problem, we only read and tidy the Mr. 
+  Trash Wheel sheet and sheets with precipitation data for 2017 and 2018.
 
 ```{r Q1MrTrashWheel}
 # read in Mr. Trash Wheel sheet
@@ -35,7 +37,7 @@ options(tibble.print_min = 3)
 # drop last column that containing notes
 
 MrTrashWheel = 
-  read_excel("./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet = "Mr. Trash Wheel", skip = 1, range = "A2:N338", col_names = TRUE) %>% 
+  read_excel("./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx", sheet = "Mr. Trash Wheel", skip = 1, range = "A2:N338", col_names = TRUE) %>% 
   janitor::clean_names()
 
 # omit rows has NA for dumpster
@@ -50,9 +52,12 @@ dumpster =
 # rename to reasonable variable names
 dumpster_rename = rename(dumpster, bags_grocery = grocery_bags, bags_chip  = chip_bags, bottles_plastic = plastic_bottles, bottles_glass = glass_bottles)
 
-# Check data
+# Look at data
 head(MrTrashWheel,5)
 head(dumpster_rename, 5)
+
+skimr::skim(MrTrashWheel)
+skimr::skim(dumpster_rename)
 ```
 
 ####  2. Problem 1 
@@ -86,6 +91,9 @@ precipitation_join =
   )
 
 head(precipitation_join,5)
+skimr::skim(precipitation_2017)
+skimr::skim(precipitation_2018)
+skimr::skim(precipitation_join)
 ```
 
 ####   2. Problem 1 
@@ -136,6 +144,7 @@ pols_tidy =
   select(year, month, everything(), -prez_dem, -prez_gop, -day)
 
 head(pols_tidy, 5)
+skimr::skim(pols_tidy)
 ```
 
 ####   2_2 2_1 Read and Tidy dataset: snp
@@ -164,7 +173,7 @@ snp_tidy =
 snp_tidy = arrange(snp_tidy, year, month)
 
 head(snp_tidy, 5)
-
+skimr::skim(snp_tidy)
 ```
 
 ####   2_3 2_1 Read and Tidy dataset: unemployment
@@ -189,6 +198,7 @@ unemployment_tidy =
   select(year, month, everything())
 
 head(unemployment_tidy, 5)
+skimr::skim(unemployment_tidy)
 ```
 
 ####   2_4 Join datasets snp, pols and unemployment
@@ -211,11 +221,68 @@ pols_snp_unemploy =
 # check joined dataset
 head(pols_snp_unemploy,5)
 tail(pols_snp_unemploy,5)
+skimr::skim(unemployment_tidy)
+skimr::skim(pols_snp_unemploy)
+
+```
+
+We used datasets from the FiveThirtyEight data for this problem.
+Each of these datasets 'pols-month.csv', 'unemployment.csv' and 'snp.csv' files was imported successfully and was cleaned. 
+
+Pols_tidy contains `r nrow(pols_tidy)` obersvations and `r ncol(pols_tidy)` variables.
+snp_tidy contains `r nrow(snp_tidy)` obersvations and `r ncol(snp_tidy)` variables.
+unemployment_tidy contains `r nrow(unemployment_tidy)` obersvations and `r ncol(unemployment_tidy)` variables.
+
+The three datasets were joined together by using the key variables "year' and "month". The combined dataset is called: "pols_snp_unemploy", which as `r nrow(pols_snp_unemploy)` obersvations and `r ncol(pols_snp_unemploy)` variables. The range of years is from `min(pols_snp_unemploy$year)` to `r max(pols_snp_unemploy$year)`. The names of the key variables are year and month.
+
+
+####   3. Problem 3 
+* This problem uses data from NYC Open data on the popularity of baby names. 
+
+First, we loadn and tidy the data.
+```{r}
+baby_names = 
+  read_csv("./data/Popular_Baby_Names.csv", skip = 1, col_names = TRUE) %>% 
+  janitor::clean_names()
+
+head(baby_names,5)
+tail(baby_names,5)
+skimr::skim(baby_names)
+summary(baby_names)
+```
+
+From the above steps, we can see that the values for variable "Child's First Name" are not consistant. Some names were capitalized only with the first letter. Some names are all entered as upper case. In order to be consistent, we need to change the names to upper case. 
+
+```{r tidy}
+ #rename = (baby_names, first_name ="Child's First Name")
+
+
+#baby_names_tidy = 
+    #rename(first_name =
+  #mutate(baby_names,
+  #)
+
+  
 ```
 
 
 
-
+  mutate (
+    # change date format
+    Date1 = as.Date(date, format='%m/%d/%Y')
+  ) %>% 
+  
+  # break date to three vars
+  separate(., "date1", c("year", "month", "day")) %>% 
+  mutate (
+   month = as.numeric(month),
+   #replace month number with month name
+   month = month.name[c(month)],
+   year = as.integer(year)
+  ) %>% 
+  # reorder varaibles and remove three variables
+  select(year, month, everything(), -day)
+```
 
 
 
