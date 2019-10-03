@@ -56,8 +56,8 @@ dumpster_rename = rename(dumpster, bags_grocery = grocery_bags, bags_chip  = chi
 head(MrTrashWheel,5)
 head(dumpster_rename, 5)
 
-skimr::skim(MrTrashWheel)
-skimr::skim(dumpster_rename)
+summary(MrTrashWheel)
+summary(dumpster_rename)
 ```
 
 ####  2. Problem 1 
@@ -91,9 +91,9 @@ precipitation_join =
   )
 
 head(precipitation_join,5)
-skimr::skim(precipitation_2017)
-skimr::skim(precipitation_2018)
-skimr::skim(precipitation_join)
+summary(precipitation_2017)
+summary(precipitation_2018)
+summary(precipitation_join)
 ```
 
 ####   2. Problem 1 
@@ -144,7 +144,7 @@ pols_tidy =
   select(year, month, everything(), -prez_dem, -prez_gop, -day)
 
 head(pols_tidy, 5)
-skimr::skim(pols_tidy)
+summary(pols_tidy)
 ```
 
 ####   2_2 2_1 Read and Tidy dataset: snp
@@ -173,7 +173,7 @@ snp_tidy =
 snp_tidy = arrange(snp_tidy, year, month)
 
 head(snp_tidy, 5)
-skimr::skim(snp_tidy)
+summary(snp_tidy)
 ```
 
 ####   2_3 2_1 Read and Tidy dataset: unemployment
@@ -198,7 +198,7 @@ unemployment_tidy =
   select(year, month, everything())
 
 head(unemployment_tidy, 5)
-skimr::skim(unemployment_tidy)
+summary(unemployment_tidy)
 ```
 
 ####   2_4 Join datasets snp, pols and unemployment
@@ -221,9 +221,7 @@ pols_snp_unemploy =
 # check joined dataset
 head(pols_snp_unemploy,5)
 tail(pols_snp_unemploy,5)
-skimr::skim(unemployment_tidy)
-skimr::skim(pols_snp_unemploy)
-
+summary(pols_snp_unemploy)
 ```
 
 We used datasets from the FiveThirtyEight data for this problem.
@@ -233,56 +231,126 @@ Pols_tidy contains `r nrow(pols_tidy)` obersvations and `r ncol(pols_tidy)` vari
 snp_tidy contains `r nrow(snp_tidy)` obersvations and `r ncol(snp_tidy)` variables.
 unemployment_tidy contains `r nrow(unemployment_tidy)` obersvations and `r ncol(unemployment_tidy)` variables.
 
-The three datasets were joined together by using the key variables "year' and "month". The combined dataset is called: "pols_snp_unemploy", which as `r nrow(pols_snp_unemploy)` obersvations and `r ncol(pols_snp_unemploy)` variables. The range of years is from `min(pols_snp_unemploy$year)` to `r max(pols_snp_unemploy$year)`. The names of the key variables are year and month.
+The three datasets were joined together by using the key variables "year' and "month". The combined dataset is called: "pols_snp_unemploy", which as `r nrow(pols_snp_unemploy)` obersvations and `r ncol(pols_snp_unemploy)` variables. The range of years is from `min(pols_snp_unemploy$year)` to `r max(pols_snp_unemploy$year)`. 
 
+Additionl summary of this the mean umeployment rate and close points by each year are listed below.
 
-####   3. Problem 3 
-* This problem uses data from NYC Open data on the popularity of baby names. 
-
-First, we loadn and tidy the data.
 ```{r}
+pols_snp_unemploy %>%
+  group_by(year) %>%
+  summarize(
+    mean_unemploy = mean(unemploy_rate),
+    sd_unemploy = sd(unemploy_rate),
+    mean_close = mean(close),
+    sd_close = sd(close)
+    ) %>% 
+knitr::kable(digits = 2)
+```
+
+The names of the key variables of the joined dataset are **year and month**.
+
+
+### Problem 3 - Part A
+#### This problem uses data from NYC Open data on the popularity of baby names. 
+#### The following code chunck load and tidy the data for popular baby names. We noticed that the structure of string variables child_first_name changed over time, we changed all the names to lower case. We also noticed that there some some duplicated rows and we used distinct function to remove all the duplicates and save to a new data file. 
+
+#### First, we load and check the data. 
+
+```{r tidy}
 baby_names = 
   read_csv("./data/Popular_Baby_Names.csv", skip = 1, col_names = TRUE) %>% 
-  janitor::clean_names()
+  janitor::clean_names() %>% 
+  rename(
+    first_name = childs_first_name,
+    birth_year = year_of_birth
+    ) %>% 
+  # change all values of first_name to lower case
+  mutate(first_name = str_to_lower(first_name)) 
 
 head(baby_names,5)
 tail(baby_names,5)
-skimr::skim(baby_names)
 summary(baby_names)
 ```
 
-From the above steps, we can see that the values for variable "Child's First Name" are not consistant. Some names were capitalized only with the first letter. Some names are all entered as upper case. In order to be consistent, we need to change the names to upper case. 
+After successfully imported the data, we noticed that the values for variable childs_first_name are not consistant. Some names were capitalized only with the first letter. Some names are all entered as upper case. In order to be consistent, we need to change the names to upper case.  We also renamed a couple of variables' names to shorter ones.
+
+We continue to apply basic EDA for the working data:
 
 ```{r tidy}
- #rename = (baby_names, first_name ="Child's First Name")
+baby_names %>% 
+    summarize(
+      n_obs = n(),
+      # look for duplicates
+      duplicate_rows = n_distinct(first_name)
+    )  
+
+# Remove duplicate rows and save finaly dataset to baby_names_tidy
+baby_names_tidy = baby_names 
+baby_names_tidy = distinct(baby_names_tidy)
+
+```
+
+From the about results, we can see that there are some duplicate rows. The following code chuck will create another dataset called baby_names_tidy to have those duplicate rows removed. The total number of rows dropped from `r nrow(baby_names)` to `r nrow(baby_names_tidy)`.
 
 
-#baby_names_tidy = 
-    #rename(first_name =
-  #mutate(baby_names,
-  #)
+### Problem 3 - Part B
+#### We produced a well-structured, reader-friendly table showing the rank in popularity of the name “Olivia” as a female baby name over time with rows for ethnicities and columns for year. We also generated a similar table for males.
 
-  
+#### Popular girl names
+
+```{r girlnames}
+baby_names_girl = baby_names_tidy
+
+# select only females
+baby_names_girl %>% 
+  arrange(first_name) %>% 
+  filter(gender == "FEMALE") %>% 
+  group_by(ethnicity) %>% 
+  # change df from long to wide have rows for ethnicities and columns for year
+  pivot_wider(
+  names_from = "birth_year", 
+  values_from = "rank" 
+  )%>%
+  select(-gender, -count) %>%
+  filter(first_name == "olivia") %>% 
+  knitr::kable()
+```
+
+#### Popular boy names
+
+```{r girlnames}
+baby_names_boy = baby_names_tidy
+
+# select only males
+baby_names_boy %>% 
+  arrange(first_name) %>% 
+  filter(gender == "MALE") %>% 
+  group_by(ethnicity) %>% 
+  filter(rank == 1) %>%
+  # change df from long to wide have rows for ethnicities and columns for year
+  pivot_wider(
+  names_from = "birth_year", 
+  values_from = "rank" 
+  )%>%
+  select(-gender, -count) %>%
+  knitr::kable()
 ```
 
 
 
-  mutate (
-    # change date format
-    Date1 = as.Date(date, format='%m/%d/%Y')
-  ) %>% 
-  
-  # break date to three vars
-  separate(., "date1", c("year", "month", "day")) %>% 
-  mutate (
-   month = as.numeric(month),
-   #replace month number with month name
-   month = month.name[c(month)],
-   year = as.integer(year)
-  ) %>% 
-  # reorder varaibles and remove three variables
-  select(year, month, everything(), -day)
-```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
