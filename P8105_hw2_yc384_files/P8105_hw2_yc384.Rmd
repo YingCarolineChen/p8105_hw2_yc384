@@ -1,0 +1,400 @@
+---
+title: "P8105_hw2_yc384"
+author: 'Ying Chen (UNI: yc384)'
+date: "9/24/2019"
+output: github_document
+---
+setwd("/Users/macbook/Documents/Statistics/P8105/HW/P8105 HW2")
+
+```{r setup, include=TRUE}
+library (tidyverse)
+library (dplyr)
+library(readxl)
+library(patchwork)
+
+rm(list = ls())
+
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE,
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+)
+
+theme_set(theme_bw() + theme(legend.position = "bottom"))
+options(tibble.print_min = 3)
+```
+
+##  P8105 DSI Homework 2
+#### This assignment reinforces ideas in Data Wrangling I
+
+###  0. Problem 0 
+* Github repo: https://github.com/YingCarolineChen/p8105_hw2_yc384.git
+* RMarkdown file name: P8105_hw2_yc384
+* Create a subdirectory to store local data files and the path is:
+        "~/Documents/Statistics/P8105/HW/P8105 HW2"
+
+###  1. Problem 1 
+#### Part 1-1: Read and tidy Mr. Trash Wheel data
+* Dataset: used **updated data "Trash-Wheel-Collection-Totals-8-6-19.xlsx"**
+* Original dataset contains 7 sheets. For this problem, we only read and tidy the Mr. 
+  Trash Wheel sheet and sheets with precipitation data for 2017 and 2018.
+
+```{r Q1MrTrashWheel}
+# read in Mr. Trash Wheel sheet
+# skip first rows with notes / figures
+# drop last column that containing notes
+
+MrTrashWheel = 
+  read_excel("./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx", sheet = "Mr. Trash Wheel", skip = 1, range = "A2:N338", col_names = TRUE) %>% 
+  janitor::clean_names()
+
+# omit rows has NA for dumpster
+dumpster = 
+  drop_na(MrTrashWheel,dumpster) %>% 
+  # Round sports balls to nearest integer
+  mutate(
+  sports_balls_round = round(sports_balls, digits = 0),
+  sports_balls_int = as.integer(sports_balls_round)
+)
+
+# rename to reasonable variable names
+dumpster_rename = rename(dumpster, bags_grocery = grocery_bags, bags_chip  = chip_bags, bottles_plastic = plastic_bottles, bottles_glass = glass_bottles)
+
+# Look at data
+head(MrTrashWheel,5)
+head(dumpster_rename, 5)
+
+summary(MrTrashWheel)
+summary(dumpster_rename)
+```
+
+###  1. Problem 1 Part 1-2 
+#### * Read and tidy precipitation data
+#### * join datasets and some data manipulations
+
+```{r Q1Precipitation}
+# read in precipitation data for 2017 and 2018
+# Omit rows without precipitation data and add a variable year
+
+precipitation_2017 = 
+  read_excel("./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet = "2017 Precipitation", skip = 1, range = "A2:B14", col_names = TRUE) %>%
+  janitor::clean_names() %>% 
+  mutate(
+    year = 2017) %>% 
+  drop_na (total)
+
+precipitation_2018 = 
+  read_excel("./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet = "2018 Precipitation", skip = 1, range = "A2:B14", col_names = TRUE) %>%
+  janitor::clean_names() %>% 
+  mutate(
+    year = 2018) %>% 
+  drop_na (total)
+
+# Combine precipitation datasets
+precipitation_join = 
+  full_join(precipitation_2017, precipitation_2018, by = NULL) %>% 
+  # convert month to a character variable
+  mutate(
+    month = month.name[month]
+  )
+
+head(precipitation_join,5)
+summary(precipitation_2017)
+summary(precipitation_2018)
+summary(precipitation_join)
+```
+
+###   2. Problem 1 Part 1-3 
+####  *Datasets description using inline R code 
+
+```{r dump2017}
+# sub dataset of year 2017
+dump2017 = filter(dumpster, year == 2017)
+```
+
+Dataset Mr. Trash Wheel contains `r nrow(MrTrashWheel)` obersvations and `r ncol(MrTrashWheel)` variables. The key variable for this dataset is called "dumpster". Variable "dumpster" has `r (nrow(MrTrashWheel) - nrow(dumpster))` rows with "NA" and will be excluded for future analyses. The median number of sports balls in a dumpster in 2017 is: `r median(dump2017$sports_balls)`.
+
+Dataset precipitation_2017 contains `r nrow(precipitation_2017)` obersvations and `r ncol(precipitation_2017)` variables. The key variables for this dataset is year and month. Dataset precipitation_2018 contains `r nrow(precipitation_2018)` obersvations and `r ncol(precipitation_2018)` variables. The key variables for this dataset are year and month. Dataset precipitation_join is the combination of datasets precipitation_2017 and precipitation_2018. The total precipitation is 2018 is `r sum(precipitation_2018$total)`in.
+
+
+###   2. Problem 2 
+* Read pols-month.csv, unemployment.csv, and snp.csv and merge them using year and month as keys
+
+####   2_1 Read and Tidy dataset: Pols
+* This code cunk will read and tidy pols-month.csv. 
+* break up the variable mon into integer variables year, month, and day; 
+* replace month number with month name; 
+* create a president variable taking values gop and dem, remove prez_dem, prez_gop & the day variable.
+
+```{r Q2 pols}
+# read in pols-month.csv
+pols = 
+  read_csv("./data/pols-month.csv", col_names = TRUE)%>% 
+  janitor::clean_names() 
+
+# tidy dataset pols
+pols_tidy = 
+  mutate (pols,
+    # change date format
+    date = as.Date(mon, format='%m/%d/%Y')
+  ) %>% 
+  # break date to three vars
+  separate(., "date", c("year", "month", "day")) %>% 
+  mutate(
+  month = as.numeric(month),
+  #replace month number with month name
+  month = month.name[c(month)],
+  year = as.integer(year)
+  ) %>% 
+  # create a president var taking values from prez_gop and prez_gop
+  mutate(., president = ifelse (prez_gop == 1, "gop", "dem")) %>%  
+  # reorder varaibles and remove three variables
+  select(year, month, everything(), -prez_dem, -prez_gop, -day)
+
+head(pols_tidy, 5)
+summary(pols_tidy)
+```
+
+####   2_2 2_1 Read and Tidy dataset: snp
+
+```{r Q2 snp}
+# read and tidy in snp.csv
+snp_tidy = 
+  read_csv("./data/snp.csv", col_names = TRUE) %>% 
+  mutate (
+    # change date format
+    Date1 = as.Date(date, format='%m/%d/%Y')
+  ) %>% 
+  janitor::clean_names() %>% 
+  # break date to three vars
+  separate(., "date1", c("year", "month", "day")) %>% 
+  mutate (
+   month = as.numeric(month),
+   #replace month number with month name
+   month = month.name[c(month)],
+   year = as.integer(year)
+  ) %>% 
+  # reorder varaibles and remove three variables
+  select(year, month, everything(), -day)
+
+# arrange snp_tidy by year and month
+snp_tidy = arrange(snp_tidy, year, month)
+
+head(snp_tidy, 5)
+summary(snp_tidy)
+```
+
+####   2_3 2_1 Read and Tidy dataset: unemployment
+
+```{r Q2 unemployment}
+# read in unemployment.csv
+unemployment = 
+  read_csv("./data/unemployment.csv", col_names = TRUE) %>% 
+  janitor::clean_names()
+
+# tidy dataset employment 
+unemployment_tidy = 
+  pivot_longer(
+    unemployment,
+    jan:dec,
+    names_to = "month",
+    values_to = "unemploy_rate"
+  ) %>% 
+  mutate(
+   year = as.integer(year) 
+  ) %>% 
+  select(year, month, everything())
+
+head(unemployment_tidy, 5)
+summary(unemployment_tidy)
+```
+
+####   2_4 Join datasets snp, pols and unemployment
+
+```{r}
+# joining snp_tidy to pols_tidy by year and month
+pols_snp = 
+  left_join(pols_tidy, snp_tidy, by = c('year' = 'year', 'month' = 'month')) %>% 
+  select(year, month, close, president,everything())
+
+# check joined dataset
+head(pols_snp,5)
+tail(pols_snp,5)
+
+# joining unemployment_tidy to pols_snp by year and month
+pols_snp_unemploy = 
+  left_join(pols_snp, unemployment_tidy, by = c('year' = 'year', 'month' = 'month')) %>%
+  select(year, month, unemploy_rate, close, president, everything())
+
+# check joined dataset
+head(pols_snp_unemploy,5)
+tail(pols_snp_unemploy,5)
+summary(pols_snp_unemploy)
+```
+
+We used datasets from the FiveThirtyEight data for this problem.
+Each of these datasets 'pols-month.csv', 'unemployment.csv' and 'snp.csv' files was imported successfully and was cleaned. 
+
+Pols_tidy contains `r nrow(pols_tidy)` obersvations and `r ncol(pols_tidy)` variables.
+snp_tidy contains `r nrow(snp_tidy)` obersvations and `r ncol(snp_tidy)` variables.
+unemployment_tidy contains `r nrow(unemployment_tidy)` obersvations and `r ncol(unemployment_tidy)` variables.
+
+The three datasets were joined together by using the key variables "year' and "month". The combined dataset is called: "pols_snp_unemploy", which as `r nrow(pols_snp_unemploy)` obersvations and `r ncol(pols_snp_unemploy)` variables. The range of years is from `min(pols_snp_unemploy$year)` to `r max(pols_snp_unemploy$year)`. 
+
+Additionl summary of this the mean umeployment rate and close points by each year are listed below.
+
+```{r}
+pols_snp_unemploy %>%
+  group_by(year) %>%
+  summarize(
+    mean_unemploy = mean(unemploy_rate),
+    sd_unemploy = sd(unemploy_rate),
+    mean_close = mean(close),
+    sd_close = sd(close)
+    ) %>% 
+knitr::kable(digits = 2)
+```
+
+The names of the key variables of the joined dataset are **year and month**.
+
+
+### Problem 3 - Part A
+#### This problem uses data from NYC Open data on the popularity of baby names. 
+#### The following code chunck load and tidy the data for popular baby names. We noticed that the structure of string variables child_first_name changed over time, we changed all the names to lower case. We also noticed that there some some duplicated rows and we used distinct function to remove all the duplicates and save to a new data file. 
+
+#### First, we load and check the data. 
+
+```{r tidy}
+baby_names = 
+  read_csv("./data/Popular_Baby_Names.csv", skip = 1, col_names = TRUE) %>% 
+  janitor::clean_names() %>% 
+  rename(
+    first_name = childs_first_name,
+    birth_year = year_of_birth
+    ) %>% 
+  # change all values of first_name to lower case
+  mutate(first_name = str_to_upper(first_name)) 
+
+head(baby_names,5)
+tail(baby_names,5)
+summary(baby_names)
+```
+
+After successfully imported the data, we noticed that the values for variable childs_first_name are not consistant. Some names were capitalized only with the first letter. Some names are all entered as upper case. In order to be consistent, we changed the names to upper case.  We also renamed a couple of variables' names to shorter ones.
+
+We continue to apply basic EDA for the working data:
+
+```{r dup}
+baby_names %>% 
+    summarize(
+      n_obs = n(),
+      # look for duplicates
+      duplicate_rows = n_distinct(first_name)
+    )  
+
+# Remove duplicate rows and save finaly dataset to baby_names_tidy
+baby_names_tidy = baby_names 
+baby_names_tidy = distinct(baby_names_tidy)
+
+```
+
+From the about results, we can see that there are some duplicate rows. The following code chuck will create another dataset called baby_names_tidy to have those duplicate rows removed. The total number of rows dropped from `r nrow(baby_names)` to `r nrow(baby_names_tidy)`.
+
+
+### Problem 3 - Part B
+#### We produced a well-structured, reader-friendly table showing the rank in popularity of the name “Olivia” as a female baby name over time with rows for ethnicities and columns for year. We also generated a similar table for males.
+
+#### Popular girl names and rank in popularity of female baby name "Olivia" 
+
+```{r girlnames}
+baby_names_girl = baby_names_tidy
+# select only females
+baby_names_girl %>% 
+  arrange(first_name) %>% 
+  filter(gender == "FEMALE") %>% 
+  #ungroup(ethnicity) %>% 
+  distinct() %>% 
+  pivot_wider(
+  names_from = birth_year, 
+  values_from = rank 
+  ) %>% 
+  select(gender, first_name, ethnicity, everything(), -count) %>%
+  filter(first_name == "OLIVIA") %>% 
+  knitr::kable()
+```
+
+From the above table, we can see that baby girl name "Olivia" has been the most popular name in both  White/NonHispanic group and Asian/Pacific Islander group since 2014.
+  
+#### Popular boy names and most popular name among male children over time.
+
+```{r boynames}
+baby_names_boy = baby_names_tidy
+# select only males
+baby_names_boy %>% 
+  arrange(birth_year, ethnicity, first_name) %>% 
+  filter(gender == "MALE") %>% 
+  #group_by(ethnicity) %>% 
+  filter(rank == 1) %>%
+  # change df from long to wide have rows for ethnicities and columns for year
+  pivot_wider(
+  names_from = "birth_year", 
+  values_from = "rank" 
+  )%>%
+  select(gender, ethnicity, everything(), -count) %>%
+  knitr::kable()
+```
+
+From the table, we can see that Jayden has been the most popular boy name from 2011 to 2015. In 2016, the most popular baby boy name was Ethan for Asian and Pacific Islander group, Noah for Black non Hispanic group, Liam for Hispanics and Joseph for White non Hispanic group. 
+
+### Problem 3 - Part C
+#### For male, white non-hispanic children born in 2016, produce a scatter plot showing the number of children with a name (y axis) against the rank in popularity of that name (x axis).
+
+```{r}
+  baby_names %>% 
+  arrange(birth_year) %>% 
+  # male, white non-hispanic, born in 2016
+  filter(gender == "MALE", birth_year == "2016", ethnicity == "WHITE NON HISPANIC") %>%
+  # scatter plot: count - y axis, rank - x axis
+  ggplot(aes(x = rank, y = count), color = "Red") + 
+  # circle size and color defined by count value
+  geom_point(shape = 21, fill = "red", aes(size = count), alpha = .4) + 
+  geom_smooth(se = FALSE) +
+  labs(
+    title = "Popularity of Baby Boy Names in 2016 in White/NonHispanic Group",
+    x = "Rank",
+    y = "Count",
+    caption = "NYC Open data"
+  ) + 
+  # change range and label of the x and y asix. 
+  scale_x_continuous(
+    breaks = c(20, 30, 40, 50, 60, 70, 80, 90, 100), 
+    labels = c("20", "30", "40", "50", "60", "70", "80", "90", "100"),
+    limits = c(20, 100)) + 
+  scale_y_continuous(
+    breaks = c(20, 40, 60, 80, 100, 120), 
+    labels = c("20", "40", "60", "80", "100", "120"),
+    limits = c(0, 120)
+    )
+    theme(legend.position = "bottom") 
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
