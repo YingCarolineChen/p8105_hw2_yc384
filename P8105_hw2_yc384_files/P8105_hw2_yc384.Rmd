@@ -375,26 +375,5 @@ From the table, we can see that Jayden has been the most popular boy name from 2
     labels = c("20", "40", "60", "80", "100", "120"),
     limits = c(0, 120)
     )
-    theme(legend.position = "bottom") 
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
